@@ -1,62 +1,61 @@
 local function ApplyStyle(bar, border)
     bar:SetStatusBarTexture("UI-HUD-CoolDownManager-Bar")
-    local bg = bar:CreateTexture(nil, "BACKGROUND", nil, -8)
-    bg:SetAtlas("UI-HUD-CoolDownManager-Bar-BG")
-    bg:SetPoint("TOPLEFT", bar, "TOPLEFT", -3, 3)
-    bg:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 7, -7)
+    if not bar.bg then
+        bar.bg = bar:CreateTexture(nil, "BACKGROUND", nil, -8)
+        bar.bg:SetAtlas("UI-HUD-CoolDownManager-Bar-BG")  -- Fixed: was "bg"
+        bar.bg:SetPoint("TOPLEFT", bar, "TOPLEFT", -3, 3)
+        bar.bg:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 7, -7)
+    end
     border:Hide()
 end
 
 PersonalResourceDisplayFrame.HealthBarsContainer:SetHeight(25)
 PersonalResourceDisplayFrame:SetScale(0.75)
+
 hooksecurefunc(PersonalResourceDisplayFrame, "SetupAlternatePowerBar", function(self)
     local prdHealthBar = self.HealthBarsContainer.healthBar
     local prdPowerBar = self.PowerBar
 
-    -- apply the bar style
     ApplyStyle(prdHealthBar, self.HealthBarsContainer.border)
     ApplyStyle(prdPowerBar, prdPowerBar.Border)
 
-    -- apply the player class color
     local localizedClass, englishClass = UnitClass("player")
-        local classColor = RAID_CLASS_COLORS[englishClass]
+    local classColor = RAID_CLASS_COLORS[englishClass]
     prdHealthBar:SetStatusBarColor(classColor.r, classColor.g, classColor.b)
 end)
-
-local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_LOGIN")
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:RegisterEvent("PLAYER_REGEN_DISABLED")
-f:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 local function ApplyFading()
     local prd = PersonalResourceDisplayFrame
     local debuffs = DebuffFrame
     local cdbuffs = BuffIconCooldownViewer
 
-    if not prd then
-        print("no PersonalResourceDisplayFrame")
+    if not prd or not prd:IsShown() then
         return
-    elseif not debuffs then
-        print("no DebuffFrame")
+    end
+    if not debuffs then
         return
-    elseif not cdbuffs then
-        print("no BuffIconCooldownViewer")
+    end
+    if not cdbuffs then
         return
     end
 
     if UnitAffectingCombat("player") then
-        -- Fade to 100% opacity over 0.2 seconds
         UIFrameFadeIn(prd, 0.2, prd:GetAlpha(), 1)
         UIFrameFadeIn(debuffs, 0.2, debuffs:GetAlpha(), 1)
         UIFrameFadeIn(cdbuffs, 0.2, cdbuffs:GetAlpha(), 1)
     else
-        -- Fade to 10% opacity over 2 seconds
-        UIFrameFadeOut(prd, 2, prd:GetAlpha(), 0.07)
+        UIFrameFadeOut(prd, 2, prd:GetAlpha(), 0.06)
         UIFrameFadeOut(debuffs, 2, debuffs:GetAlpha(), 0.1)
         UIFrameFadeOut(cdbuffs, 2, cdbuffs:GetAlpha(), 0.1)
     end
 end
+
+
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:RegisterEvent("PLAYER_REGEN_DISABLED")
+f:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
@@ -68,23 +67,9 @@ f:SetScript("OnEvent", function(self, event, ...)
         C_CVar.SetCVar("damageMeterEnabled", "1")
     elseif event == "PLAYER_ENTERING_WORLD" then
         -- Small delay to ensure all is initialized
-        C_Timer.After(1, ApplyFading)
+        C_Timer.After(3, ApplyFading)
         self:UnregisterEvent("PLAYER_ENTERING_WORLD")
     else
         ApplyFading()
-    end
-end)
-
--- workaround for Blizzard PRD bug
-local bugFix = CreateFrame("Frame")
-bugFix:RegisterEvent("UPDATE_SHAPESHIFT_FORM")
-bugFix:SetScript("OnEvent", function(self, event)
-    if event == "UPDATE_SHAPESHIFT_FORM" then
-        if PersonalResourceDisplayFrame.AlternatePowerBar and GetShapeshiftFormID() == 1 then
-            PersonalResourceDisplayFrame:UpdateAdditionalBarAnchors()
-            PersonalResourceDisplayFrame.AlternatePowerBar:Show();
-        else
-            PersonalResourceDisplayFrame.AlternatePowerBar:Hide();
-        end
     end
 end)
