@@ -5,4 +5,4 @@
 ## Notes: Tweaks to blizzard PersonalResourceDisplay
 ## Author: Banksy
 
-core.lua
+Code.lua
