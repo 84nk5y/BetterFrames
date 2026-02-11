@@ -1,8 +1,0 @@
-## Interface: 120000
-## Title: BetterPersonalResourceDisplay
-## Category-enUS: Better UI
-## IconTexture: 618858
-## Notes: Tweaks to blizzard PersonalResourceDisplay
-## Author: Banksy
-
-Code.lua
