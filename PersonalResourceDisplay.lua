@@ -1,6 +1,8 @@
 PersonalResourceDisplayFrame.HealthBarsContainer:SetHeight(25)
 PersonalResourceDisplayFrame:SetScale(0.75)
 
+local CACHED_CLASS_COLOR = nil
+
 local function StyleBar(bar, border)
     bar:SetStatusBarTexture("UI-HUD-CoolDownManager-Bar")
     if not bar.bg then
@@ -32,9 +34,9 @@ local function StyleHeals(bar)
         bar.otherHealPrediction
     }
 
-    for _, bar in ipairs(bars) do
-        if bar then
-            bar:SetAtlas("UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health-Status")
+    for _, b in ipairs(bars) do
+        if b then
+            b:SetAtlas("UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health-Status")
         end
     end
 end
@@ -49,25 +51,21 @@ hooksecurefunc(PersonalResourceDisplayFrame, "SetupAlternatePowerBar", function(
     StyleAbsorbs(prdHealthBar)
     StyleHeals(prdHealthBar)
 
-    local _, englishClass = UnitClass("player")
-    local classColor = RAID_CLASS_COLORS[englishClass]
-    prdHealthBar:SetStatusBarColor(classColor.r, classColor.g, classColor.b)
+    if not CACHED_CLASS_COLOR then
+        local className = select(2, UnitClass("player"))
+        CACHED_CLASS_COLOR = RAID_CLASS_COLORS[className]
+    end
+
+    prdHealthBar:SetStatusBarColor(CACHED_CLASS_COLOR.r, CACHED_CLASS_COLOR.g, CACHED_CLASS_COLOR.b)
 end)
 
 local function ApplyFading()
     local prd = PersonalResourceDisplayFrame
+    if not prd or not prd:IsShown() then return end
+
     local debuffs = DebuffFrame
     local cdbuffs = BuffIconCooldownViewer
-
-    if not prd or not prd:IsShown() then
-        return
-    end
-    if not debuffs then
-        return
-    end
-    if not cdbuffs then
-        return
-    end
+    if not debuffs or not cdbuffs then return end
 
     if UnitAffectingCombat("player") then
         UIFrameFadeIn(prd, 0.2, prd:GetAlpha(), 1)
@@ -95,7 +93,7 @@ f:SetScript("OnEvent", function(self, event, ...)
         C_CVar.SetCVar("externalDefensivesEnabled", "1")
         C_CVar.SetCVar("damageMeterEnabled", "1")
     elseif event == "PLAYER_ENTERING_WORLD" then
-        -- Small delay to ensure all is initialized
+        -- Small delay to ensure all frames are initialized before fading
         C_Timer.After(3, ApplyFading)
 
         self:UnregisterEvent("PLAYER_ENTERING_WORLD")

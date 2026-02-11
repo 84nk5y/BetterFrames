@@ -10,7 +10,7 @@ local function InstallGuard()
 
     deathDialog.OnButton1 = function(dialog, data)
         if IsInRaid() and not IsShiftKeyDown() then
-            print("|cff00ccff[BeterFrames]|r Press Shift+click to release in a raid.")
+            print("|cffB0C4DE[ReleaseGuard]|r Press Shift+click to release in a raid.")
             return -- block: do NOT call RepopMe()
         end
         return ORIGINAL_ONBUTTON1(dialog, data)
