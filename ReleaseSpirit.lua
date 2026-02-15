@@ -9,7 +9,7 @@ local function InstallGuard()
     ORIGINAL_ONBUTTON1 = deathDialog.OnButton1
 
     deathDialog.OnButton1 = function(dialog, data)
-        if IsInRaid() and not IsShiftKeyDown() then
+        if IsInRaid() and GetNumGroupMembers() > 1 and not IsShiftKeyDown() then
             print("|cffB0C4DE[ReleaseGuard]|r Press Shift+click to release in a raid.")
             StaticPopup_Show("DEATH")
         else
