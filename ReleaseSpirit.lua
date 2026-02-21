@@ -1,29 +1,14 @@
-local ORIGINAL_ONBUTTON1 = nil
+hooksecurefunc("StaticPopup_Show", function(which)
+    if which == "DEATH" then
+        local button = StaticPopup1Button1
 
-local function InstallGuard()
-    if ORIGINAL_ONBUTTON1 then return false end
-
-    local deathDialog = StaticPopupDialogs["DEATH"]
-    if not deathDialog then return false end
-
-    ORIGINAL_ONBUTTON1 = deathDialog.OnButton1
-
-    deathDialog.OnButton1 = function(dialog, data)
-        if IsInRaid() and GetNumGroupMembers() > 1 and not IsShiftKeyDown() then
-            print("|cffB0C4DE[ReleaseGuard]|r Press Shift+click to release in a raid.")
-            StaticPopup_Show("DEATH")
-        else
-            return ORIGINAL_ONBUTTON1(dialog, data)
-        end
-    end
-
-    return true
-end
-
-local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:SetScript("OnEvent", function(self, event, ...)
-    if InstallGuard() then
-        self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+        button:SetScript("OnClick", function(self)
+            if IsInRaid() and GetNumGroupMembers() > 1 and not IsShiftKeyDown() then
+                print("|cffB0C4DE[ReleaseGuard]|r Press Shift+click to release in a raid.")
+            else
+                RepopMe()
+                StaticPopup_Hide("DEATH")
+            end
+        end)
     end
 end)
