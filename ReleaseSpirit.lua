@@ -1,14 +1,19 @@
-hooksecurefunc("StaticPopup_Show", function(which)
-    if which == "DEATH" then
-        local button = StaticPopup1Button1
+local blocked = false
 
-        button:SetScript("OnClick", function(self)
-            if IsInRaid() and GetNumGroupMembers() > 1 and not IsShiftKeyDown() then
-                print("|cffB0C4DE[ReleaseGuard]|r Press Shift+click to release in a raid.")
-            else
-                RepopMe()
-                StaticPopup_Hide("DEATH")
-            end
-        end)
+hooksecurefunc("StaticPopup_OnClick", function(dialog, buttonIndex)
+    if dialog.which == "DEATH" and buttonIndex == 1 then
+        if IsInRaid() and GetNumGroupMembers() > 1 and not IsShiftKeyDown() then
+            blocked = true
+            print("|cffB0C4DE[ReleaseGuard]|r Press Shift+click to release in a raid.")
+        end
     end
 end)
+
+local originalRepopMe = RepopMe
+RepopMe = function()
+    if blocked then
+        blocked = false
+        return
+    end
+    originalRepopMe()
+end
