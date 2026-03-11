@@ -1,7 +1,8 @@
 hooksecurefunc(NamePlateAuraItemMixin, "SetAura", function(self, aura)
-    --if not aura or issecretvalue(aura.expirationTime) then return end
+    if not aura then return end
 
-    if self.Cooldown then
-        self.Cooldown:SetHideCountdownNumbers(true)
+    local cooldown = self.Cooldown
+    if cooldown then
+        pcall(function() cooldown:SetHideCountdownNumbers(true) end)
     end
 end)
