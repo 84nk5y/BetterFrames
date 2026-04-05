@@ -9,3 +9,4 @@
 Nameplates.lua
 PersonalResourceDisplay.lua
 ReleaseSpirit.lua
+LfgEye.lua
