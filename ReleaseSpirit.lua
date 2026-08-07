@@ -8,7 +8,7 @@ local function GuardReleaseButton()
             local button = _G["StaticPopup" .. i .. "Button1"]
             if button and not button.releaseGuardHooked then
                 button:HookScript("OnClick", function()
-                    if IsInRaid() and GetNumGroupMembers() > 1 and not IsShiftKeyDown() then
+                    if IsInInstance() and IsInRaid() and GetNumGroupMembers() > 1 and not IsShiftKeyDown() then
                         -- Re-hide the result of the click by re-showing the popup
                         -- We can't block, but we can immediately show a warning
                         -- and the actual block must happen in RepopMe
