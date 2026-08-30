@@ -1,12 +1,11 @@
-## Interface: 120100
+## Interface: 11509
 ## Title: BetterFrames
 ## Category-enUS: Better UI
 ## IconTexture: 618858
 ## Notes: Tweaks to Blizzard UI frames
 ## Author: Banksy
-## RequiredDeps: Blizzard_Nameplates, Blizzard_PersonalResourceDisplay
+## RequiredDeps: Blizzard_Nameplates
 
 Nameplates.lua
-PersonalResourceDisplay.lua
+PersonalResourceDisplay.xml
 ReleaseSpirit.lua
-LfgEye.lua
