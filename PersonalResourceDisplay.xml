@@ -2,9 +2,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
     <Script file="PersonalResourceDisplay.lua"/>
 
-    <StatusBar name="PrdStatusBarTemplate" virtual="true" minValue="0" maxValue="1" defaultValue="1">
+    <StatusBar name="PrdStatusBarTemplate" virtual="true" minValue="0" maxValue="1" defaultValue="1" mixin="PrdStatusBarMixin">
         <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
-
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture parentKey="bg">
@@ -24,7 +23,6 @@
                 </FontString>
             </Layer>
         </Layers>
-
         <Frames>
             <Frame parentKey="border" inherits="BackdropTemplate">
                 <Anchors>
@@ -33,23 +31,62 @@
                 </Anchors>
             </Frame>
         </Frames>
-
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnEvent method="OnEvent"/>
         </Scripts>
     </StatusBar>
 
-    <Frame name="Prd" parent="UIParent" mixin="PrdMixin">
-        <Size x="160" y="60"/>
+	<Frame name="PrdAuraButtonTemplate" virtual="true" enableMouse="true" hidden="true" mixin="PrdAuraButtonMixin">
+		<Size x="20" y="14"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Border" setAllPoints="true">
+					<Color r="0" g="0" b="0"/>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture parentKey="Icon">
+					<Size x="18" y="12"/>
+					<Anchors>
+						<Anchor point="CENTER"/>
+					</Anchors>
+					<TexCoords left="0.05" right="0.95" top="0.1" bottom="0.6"/>
+				</Texture>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Cooldown parentKey="Cooldown" inherits="CooldownFrameTemplate" hideCountdownNumbers="true" reverse="true" drawEdge="true" hidden="true">
+				<Anchors>
+					<Anchor point="CENTER" x="0" y="-1"/>
+				</Anchors>
+			</Cooldown>
+			<Frame parentKey="CountFrame" setAllPoints="true">
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString parentKey="Count" inherits="NumberFontNormalSmall" justifyH="RIGHT">
+							<Anchors>
+								<Anchor point="BOTTOMRIGHT" x="3" y="-2"/>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnEnter method="OnEnter" />
+			<OnLeave method="OnLeave" />
+		</Scripts>
+	</Frame>
 
+    <Frame name="Prd" parent="UIParent" mixin="PrdMixin">
+        <Size x="160" y="70"/>
         <Scripts>
             <OnLoad method="OnLoad"/>
             <OnEvent method="OnEvent"/>
             <OnEnter method="OnEnter"/>
             <OnLeave method="OnLeave"/>
         </Scripts>
-
         <Anchors>
             <Anchor point="TOP" relativeTo="UIParent" relativePoint="CENTER">
                 <Offset x="0" y="-100"/>
@@ -64,7 +101,7 @@
                         <Offset x="0" y="0"/>
                     </Anchor>
                 </Anchors>
-                <BarColor r="0" g="1" b="0"/>
+                <BarColor r="0.0" g="1.0" b="0.0"/>
             </StatusBar>
 
             <StatusBar name="PrdPowerBar" parentKey="PrdPowerBar" inherits="PrdStatusBarTemplate" mixin="PrdPowerBarMixin">
@@ -74,8 +111,51 @@
                         <Offset x="0" y="-2"/>
                     </Anchor>
                 </Anchors>
-                <BarColor r="0" g="0.4" b="1"/>
+                <BarColor r="0.0" g="0.0" b="1.0"/>
             </StatusBar>
+
+            <StatusBar name="PrdPetHealthBar" parentKey="PrdPetHealthBar" inherits="PrdStatusBarTemplate" mixin="PrdPetHealthBarMixin">
+                <Size x="150" y="12"/>
+                <Anchors>
+                    <Anchor point="TOP" relativeTo="PrdPowerBar" relativePoint="BOTTOM">
+                        <Offset x="0" y="-2"/>
+                    </Anchor>
+                </Anchors>
+                <BarColor r="0.52" g="1.0" b="0.52"/>
+            </StatusBar>
+
+            <Frame name="BuffFrame" inherits="HorizontalLayoutFrame" mixin="BuffContainerMixin">
+                <Size x="150" y="14"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" relativeTo="PrdHealthBar" relativePoint="TOPLEFT">
+                        <Offset x="0" y="2"/>
+                    </Anchor>
+                </Anchors>
+                <KeyValues>
+                    <KeyValue key="spacing" value="4" type="number"/>
+                    <KeyValue key="fixedHeight" value="14" type="number"/>
+                </KeyValues>
+                <Scripts>
+                    <OnLoad method="OnLoad"/>
+                    <OnEvent method="OnEvent"/>
+                </Scripts>
+            </Frame>
+            <Frame name="DebuffFrame" inherits="HorizontalLayoutFrame" mixin="DebuffContainerMixin">
+                <Size x="150" y="14"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="PrdPowerBar" relativePoint="BOTTOMLEFT">
+                        <Offset x="0" y="-2"/>
+                    </Anchor>
+                </Anchors>
+                <KeyValues>
+                    <KeyValue key="spacing" value="4" type="number"/>
+                    <KeyValue key="fixedHeight" value="14" type="number"/>
+                </KeyValues>
+                <Scripts>
+                    <OnLoad method="OnLoad"/>
+                    <OnEvent method="OnEvent"/>
+                </Scripts>
+            </Frame>
         </Frames>
     </Frame>
 </Ui>
