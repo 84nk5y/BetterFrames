@@ -158,4 +158,20 @@
             </Frame>
         </Frames>
     </Frame>
+
+    <GameTooltip name="PrdTooltip" frameStrata="TOOLTIP" hidden="true" parent="UIParent" inherits="GameTooltipTemplate">
+        <Scripts>
+            <OnUpdate>
+                self.updateTooltipTimer = (self.updateTooltipTimer or TOOLTIP_UPDATE_TIME) - elapsed;
+                if self.updateTooltipTimer > 0 then
+                    return;
+                end
+                self.updateTooltipTimer = TOOLTIP_UPDATE_TIME;
+                local owner = self:GetOwner();
+                if owner and owner.UpdateTooltip then
+                    owner:UpdateTooltip();
+                end
+            </OnUpdate>
+        </Scripts>
+    </GameTooltip>
 </Ui>

@@ -124,9 +124,20 @@ end
 PrdAuraButtonMixin = {}
 
 function PrdAuraButtonMixin:OnEnter()
+    PrdTooltip:SetOwner(self, "ANCHOR_LEFT")
+
+    if(self.spellID and not self.auraInstanceID) then
+        PrdTooltip:SetSpellByID(self.spellID)
+    elseif(self.auraInstanceID) then
+        local setFunction = self.isBuff and PrdTooltip.SetUnitBuffByAuraInstanceID or PrdTooltip.SetUnitDebuffByAuraInstanceID
+        setFunction(PrdTooltip, self.unit, self.auraInstanceID, self:GetParent():GetFilter())
+    end
+
+    self.UpdateTooltip = self.OnEnter
 end
 
 function PrdAuraButtonMixin:OnLeave()
+    PrdTooltip:Hide()
 end
 
 
@@ -187,9 +198,10 @@ function AuraContainerMixing:OnUnitAuraUpdate(unit, unitAuraUpdateInfo)
     self.auras:Iterate(function(auraInstanceID, aura)
         local auraButton = self.auraPool:Acquire()
         auraButton.auraInstanceID = auraInstanceID
-        auraButton.isauraButton = aura.isHelpful
+        auraButton.isBuff = aura.isHelpful
         auraButton.layoutIndex = auraIndex
         auraButton.spellID = aura.spellId
+        auraButton.unit = unit
 
         auraButton.Icon:SetTexture(aura.icon)
         if (aura.applications > 1) then
