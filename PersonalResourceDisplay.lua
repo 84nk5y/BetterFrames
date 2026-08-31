@@ -31,10 +31,12 @@ end
 
 PrdStatusBarMixin = {}
 
-function PrdStatusBarMixin:SetupBorder()
+function PrdStatusBarMixin:Setup()
     self:GetStatusBarTexture():SetHorizTile(false)
     self.border:SetBackdrop({ edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 11 })
     self.border:SetBackdropBorderColor(0.7, 0.7, 0.7, 1)
+
+    self:HideText()
 end
 
 function PrdStatusBarMixin:ShowText()
@@ -49,7 +51,7 @@ end
 PrdHealthBarMixin = {}
 
 function PrdHealthBarMixin:OnLoad()
-    self:SetupBorder()
+    self:Setup()
 
     self.colorSet = false
 
@@ -75,7 +77,7 @@ end
 PrdPowerBarMixin = {}
 
 function PrdPowerBarMixin:OnLoad()
-    self:SetupBorder()
+    self:Setup()
 
     self.colorSet = false
 
@@ -101,11 +103,12 @@ end
 PrdPetHealthBarMixin = {}
 
 function PrdPetHealthBarMixin:OnLoad()
-    self:SetupBorder()
+    self:Setup()
 
     local _, class = UnitClass("player")
 
     if class ~= "HUNTER" and class ~= "WARLOCK" then
+        self:SetSize(150, 1)
         self:Hide()
     else
         self:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -239,6 +242,9 @@ function AuraContainerMixing:ParseAllAuras(unit)
     AuraUtil.ForEachAura(unit, self:GetFilter(), nil, HandleAura, true)
 end
 
+local BUFFS_TO_BE_FILTERED = {
+    ["Power Word: Fortitude"] = true
+}
 
 BuffContainerMixin = CreateFromMixins(AuraContainerMixing)
 
@@ -246,8 +252,8 @@ function BuffContainerMixin:GetFilter()
     return "HELPFUL"
 end
 
-function BuffContainerMixin:ShouldShow()
-    return true
+function BuffContainerMixin:ShouldShow(aura)
+    return not BUFFS_TO_BE_FILTERED[aura.name]
 end
 
 
@@ -257,6 +263,6 @@ function DebuffContainerMixin:GetFilter()
     return "HARMFUL"
 end
 
-function DebuffContainerMixin:ShouldShow()
+function DebuffContainerMixin:ShouldShow(aura)
     return true
 end

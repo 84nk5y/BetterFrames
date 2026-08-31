@@ -3,7 +3,7 @@
     <Script file="PersonalResourceDisplay.lua"/>
 
     <StatusBar name="PrdStatusBarTemplate" virtual="true" minValue="0" maxValue="1" defaultValue="1" mixin="PrdStatusBarMixin">
-        <BarTexture file="Interface\TargetingFrame\UI-StatusBar"/>
+        <BarTexture parentKey="barTexture" atlas="UI-HUD-CoolDownManager-Bar" setAllPoints="true"/>
         <Layers>
             <Layer level="BACKGROUND">
                 <Texture parentKey="bg">
@@ -95,7 +95,7 @@
 
         <Frames>
             <StatusBar name="PrdHealthBar" parentKey="PrdHealthBar" inherits="PrdStatusBarTemplate" mixin="PrdHealthBarMixin">
-                <Size x="150" y="22"/>
+                <Size x="150" y="20"/>
                 <Anchors>
                     <Anchor point="TOP" relativeTo="Prd" relativePoint="TOP">
                         <Offset x="0" y="0"/>
@@ -105,7 +105,7 @@
             </StatusBar>
 
             <StatusBar name="PrdPowerBar" parentKey="PrdPowerBar" inherits="PrdStatusBarTemplate" mixin="PrdPowerBarMixin">
-                <Size x="150" y="12"/>
+                <Size x="150" y="10"/>
                 <Anchors>
                     <Anchor point="TOP" relativeTo="PrdHealthBar" relativePoint="BOTTOM">
                         <Offset x="0" y="-2"/>
@@ -115,7 +115,7 @@
             </StatusBar>
 
             <StatusBar name="PrdPetHealthBar" parentKey="PrdPetHealthBar" inherits="PrdStatusBarTemplate" mixin="PrdPetHealthBarMixin">
-                <Size x="150" y="12"/>
+                <Size x="150" y="10"/>
                 <Anchors>
                     <Anchor point="TOP" relativeTo="PrdPowerBar" relativePoint="BOTTOM">
                         <Offset x="0" y="-2"/>
@@ -125,7 +125,7 @@
             </StatusBar>
 
             <Frame name="BuffFrame" inherits="HorizontalLayoutFrame" mixin="BuffContainerMixin">
-                <Size x="150" y="14"/>
+                <Size x="150" y="16"/>
                 <Anchors>
                     <Anchor point="BOTTOMLEFT" relativeTo="PrdHealthBar" relativePoint="TOPLEFT">
                         <Offset x="0" y="2"/>
@@ -133,7 +133,7 @@
                 </Anchors>
                 <KeyValues>
                     <KeyValue key="spacing" value="4" type="number"/>
-                    <KeyValue key="fixedHeight" value="14" type="number"/>
+                    <KeyValue key="fixedHeight" value="16" type="number"/>
                 </KeyValues>
                 <Scripts>
                     <OnLoad method="OnLoad"/>
@@ -141,15 +141,15 @@
                 </Scripts>
             </Frame>
             <Frame name="DebuffFrame" inherits="HorizontalLayoutFrame" mixin="DebuffContainerMixin">
-                <Size x="150" y="14"/>
+                <Size x="150" y="16"/>
                 <Anchors>
-                    <Anchor point="TOPLEFT" relativeTo="PrdPowerBar" relativePoint="BOTTOMLEFT">
+                    <Anchor point="TOPLEFT" relativeTo="PrdPetHealthBar" relativePoint="BOTTOMLEFT">
                         <Offset x="0" y="-2"/>
                     </Anchor>
                 </Anchors>
                 <KeyValues>
                     <KeyValue key="spacing" value="4" type="number"/>
-                    <KeyValue key="fixedHeight" value="14" type="number"/>
+                    <KeyValue key="fixedHeight" value="16" type="number"/>
                 </KeyValues>
                 <Scripts>
                     <OnLoad method="OnLoad"/>
