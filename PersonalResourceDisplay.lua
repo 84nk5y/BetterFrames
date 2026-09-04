@@ -6,7 +6,7 @@ local function ApplyFading()
     local cdbuffs = BuffIconCooldownViewer
     if not debuffs or not cdbuffs then return end
 
-    if UnitAffectingCombat("player") then
+    if UnitAffectingCombat("player") or UnitExists("target") then
         UIFrameFadeIn(prd, 0.2, prd:GetAlpha(), 1)
         UIFrameFadeIn(debuffs, 0.2, debuffs:GetAlpha(), 1)
         UIFrameFadeIn(cdbuffs, 0.2, cdbuffs:GetAlpha(), 1)
@@ -23,6 +23,7 @@ f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("PLAYER_REGEN_DISABLED")
 f:RegisterEvent("PLAYER_REGEN_ENABLED")
+f:RegisterEvent("PLAYER_TARGET_CHANGED")
 f:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         C_CVar.SetCVar("UnitNameOwn", "0")
