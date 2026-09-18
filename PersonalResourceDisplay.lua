@@ -1,3 +1,29 @@
+local function FixStyle()
+    local prd = PersonalResourceDisplayFrame
+    if not prd or not prd:IsShown() then return end
+
+    local bar = prd.HealthBarsContainer.healthBar
+
+    bar.myHealAbsorb:SetAtlas("raidframe-shield-fill")
+    bar.totalAbsorb:SetAtlas("raidframe-shield-fill")
+    bar.totalAbsorbOverlay:SetAtlas("RaidFrame-Shield-Overlay", true)
+    bar.totalAbsorbOverlay:SetHorizTile(true)
+    bar.totalAbsorbOverlay:SetVertTile(true)
+    bar.overAbsorbGlow:SetAtlas("RaidFrame-Shield-Overshield", true)
+    bar.overHealAbsorbGlow:SetAtlas("RaidFrame-Absorb-Overabsorb", true)
+
+    local bars = {
+        bar.myHealPrediction,
+        bar.otherHealPrediction
+    }
+
+    for _, b in ipairs(bars) do
+        if b then
+            b:SetAtlas("UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health-Status")
+        end
+    end
+end
+
 local function ApplyFading()
     local prd = PersonalResourceDisplayFrame
     if not prd or not prd:IsShown() then return end
@@ -17,6 +43,11 @@ local function ApplyFading()
     end
 end
 
+local function Setup()
+    FixStyle()
+    ApplyFading()
+end
+
 
 local f = CreateFrame("Frame")
 f:RegisterEvent("PLAYER_LOGIN")
@@ -34,7 +65,7 @@ f:SetScript("OnEvent", function(self, event, ...)
         C_CVar.SetCVar("damageMeterEnabled", "1")
     elseif event == "PLAYER_ENTERING_WORLD" then
         -- Small delay to ensure all frames are initialized before fading
-        C_Timer.After(3, ApplyFading)
+        C_Timer.After(3, Setup)
 
         self:UnregisterEvent("PLAYER_ENTERING_WORLD")
     else
