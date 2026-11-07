@@ -5,8 +5,10 @@
 ## Notes: Tweaks to Blizzard UI frames
 ## Author: Banksy
 ## RequiredDeps: Blizzard_Nameplates, Blizzard_PersonalResourceDisplay
+## SavedVariables: BF_SavedVars
 
 Nameplates.lua
 PersonalResourceDisplay.lua
 ReleaseSpirit.lua
 LfgEye.lua
+CinematicSkipper.lua
